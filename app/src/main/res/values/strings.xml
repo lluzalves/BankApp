@@ -2,4 +2,9 @@
     <string name="app_name">BankApp</string>
     <string name="login_label">Login</string>
     <string name="bank_name">Bank</string>
+    <string name="username_tip">User</string>
+    <string name="password_hint">Password</string>
+    <string name="error_invalid_email_or_cpf">Email ou cpf inválido. Tente novamente</string>
+    <string name="error_password">Verifique sua senha e tente novamente</string>
+    <string name="warning">Please check your credentials</string>
 </resources>

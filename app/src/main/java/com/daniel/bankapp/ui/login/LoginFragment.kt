@@ -6,11 +6,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.daniel.bankapp.R
+import com.daniel.bankapp.util.PasswordTextWatcher
+import com.daniel.bankapp.util.UserNameTextWatcher
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.login.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
-class LoginFragment : Fragment(), View.OnClickListener {
+class LoginFragment : Fragment() {
     private val viewModel: LoginViewModel by viewModel()
+    private lateinit var userInputTextWatcher: UserNameTextWatcher
+    private lateinit var passwordTextWatcher: PasswordTextWatcher
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -25,18 +31,29 @@ class LoginFragment : Fragment(), View.OnClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        btnLogin.setOnClickListener(this)
-    }
 
-    override fun onClick(view: View) {
-        when (view) {
-            btnLogin -> {
-                val userName = userInput.text.toString()
-                val password = passwordInput.text.toString()
-                if (!userName.isNullOrBlank() && !password.isNullOrBlank()) {
-                    viewModel.onLoginRequest(userName = userName, password = password)
+        userInput.apply {
+            userInputTextWatcher = UserNameTextWatcher(userNameEditText = this)
+            addTextChangedListener(userInputTextWatcher)
+        }
+
+        passwordInput.apply {
+            passwordTextWatcher = PasswordTextWatcher(passwordEditText = this)
+            addTextChangedListener(passwordTextWatcher)
+        }
+
+        btnLogin.apply {
+            setOnClickListener { view ->
+                if (userInputTextWatcher.isEmailInputCorrect && passwordTextWatcher.isPasswordInputCorrect) {
+                    viewModel.onLoginRequest(
+                        userName = userInput.text.toString(),
+                        password = userInput.text.toString()
+                    )
+                } else {
+                    Snackbar.make(view, getString(R.string.warning), Snackbar.LENGTH_LONG).show()
                 }
             }
         }
     }
+
 }
