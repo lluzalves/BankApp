@@ -31,6 +31,7 @@ class LoginViewModel : ViewModel(), KoinComponent {
     }
 
      fun onLoginRequest(userName: String, password: String) {
+        emmitState(DataState.LOADING,null,null)
         compositeDisposable.add(useCase.getUserAccount(userName, password)
             .applyScheduler()
             .subscribeBy { userAccount ->

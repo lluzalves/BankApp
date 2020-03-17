@@ -7,7 +7,7 @@ object DataValidator {
 
     private val cpfRegex = "(\\d{3}.?\\d{3}.?\\d{3}-?\\d{2})"
     private val emailRegex = "^[A-Za-z0-9+_.-]+@(.+)\$"
-    private var passwordRegex = "((?=.*\\d)(?=.*[A-Z])(?=.*\\W))"
+    private var passwordRegex = "^.*(?=.{4,})(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\\W]).*\$"
     private lateinit var pattern: Pattern
     private lateinit var matcher: Matcher
 
