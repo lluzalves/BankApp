@@ -1,8 +1,12 @@
 package com.daniel.bankapp.ui.login
 
+import android.accounts.Account
+import android.accounts.AccountManager
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.daniel.bankapp.application.permission.BankAppPermissions
 import com.daniel.bankapp.base.DataState
 import com.daniel.bankapp.base.ModelDataState
 import com.daniel.commons.applyScheduler
@@ -12,6 +16,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
 import org.koin.core.KoinComponent
 import org.koin.core.inject
+
 
 class LoginViewModel : ViewModel(), KoinComponent {
 
@@ -23,6 +28,7 @@ class LoginViewModel : ViewModel(), KoinComponent {
     private val compositeDisposable = CompositeDisposable()
 
     fun onStart() {
+        BankAppPermissions().checkPermissions()
         emmitState(DataState.INITIAL, null, null)
     }
 
@@ -30,14 +36,15 @@ class LoginViewModel : ViewModel(), KoinComponent {
         compositeDisposable.clear()
     }
 
-     fun onLoginRequest(userName: String, password: String) {
-        emmitState(DataState.LOADING,null,null)
+    fun onLoginRequest(userName: String, password: String) {
+        emmitState(DataState.LOADING, null, null)
         compositeDisposable.add(useCase.getUserAccount(userName, password)
             .applyScheduler()
             .subscribeBy { userAccount ->
                 emmitState(DataState.COMPLETED, userAccount, null)
             })
     }
+
 
     private fun emmitState(dataState: DataState, user: UserAccount?, errorMessage: String?) {
         when (dataState) {
@@ -78,5 +85,13 @@ class LoginViewModel : ViewModel(), KoinComponent {
                 _value.value = loginData
             }
         }
+    }
+
+    fun addAccount(
+        accountManager: AccountManager,
+        account: Account,
+        password: String
+    ) {
+        val response = accountManager.addAccountExplicitly(account, password, null)
     }
 }

@@ -16,6 +16,7 @@ class UserNameTextWatcher constructor (private val userNameEditText : EditText):
 
     override fun afterTextChanged(s: Editable) {
         if (!validateUserInput(userNameEditText.text.toString())) {
+            isEmailInputCorrect = false
             userNameEditText.error = context.getString(R.string.error_invalid_email_or_cpf)
         } else {
             isEmailInputCorrect = true

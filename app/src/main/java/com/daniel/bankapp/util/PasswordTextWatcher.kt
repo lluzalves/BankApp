@@ -17,6 +17,7 @@ class PasswordTextWatcher constructor(private val passwordEditText: EditText) : 
 
     override fun afterTextChanged(s: Editable) {
         if (!validatePassword(passwordEditText.text.toString())) {
+            isPasswordInputCorrect = false
             passwordEditText.error = context.getString(R.string.error_password)
         } else {
             isPasswordInputCorrect = true

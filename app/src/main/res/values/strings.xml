@@ -3,8 +3,16 @@
     <string name="login_label">Login</string>
     <string name="bank_name">Bank</string>
     <string name="username_tip">User</string>
+    <string name="my_account_preferences">My account preferences</string>
     <string name="password_hint">Password</string>
     <string name="error_invalid_email_or_cpf">Email ou cpf inválido. Tente novamente</string>
     <string name="error_password">Verifique sua senha e tente novamente</string>
     <string name="warning">Please check your credentials</string>
+    <string name="invalid_auth_token">Invalid credentials</string>
+    <string name="account_type">com.daniel.bankapp</string>
+    <string name="sync_contacts_summary">Sync your contacts</string>
+    <string name="my_account">My account</string>
+    <string name="notifications_title">Notification Preferences</string>
+    <string name="get_notified">getNotified</string>
+    <string name="receive_notifications">Receive Notifications</string>
 </resources>

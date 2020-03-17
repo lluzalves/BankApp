@@ -1,5 +1,7 @@
 package com.daniel.bankapp.ui.login
 
+import android.accounts.Account
+import android.accounts.AccountManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +10,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.daniel.bankapp.R
+import com.daniel.bankapp.auth.*
 import com.daniel.bankapp.base.DataState
 import com.daniel.bankapp.base.ModelDataState
 import com.daniel.bankapp.util.PasswordTextWatcher
@@ -15,10 +18,13 @@ import com.daniel.bankapp.util.UserNameTextWatcher
 import com.daniel.domain.dto.UserAccount
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.login.*
+import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
+
 
 class LoginFragment : Fragment() {
     private val viewModel: LoginViewModel by viewModel()
+    private val accountManager: AccountManager by inject()
     private lateinit var userInputTextWatcher: UserNameTextWatcher
     private lateinit var passwordTextWatcher: PasswordTextWatcher
 
@@ -45,6 +51,9 @@ class LoginFragment : Fragment() {
         userInput.apply {
             userInputTextWatcher = UserNameTextWatcher(userNameEditText = this)
             addTextChangedListener(userInputTextWatcher)
+            if (!accountManager.getAccountsByType(Auth.ARG_ACCOUNT_TYPE).isNullOrEmpty()) {
+                this.setText(accountManager.getAccountsByType(Auth.ARG_ACCOUNT_TYPE)[0].name)
+            }
         }
 
         passwordInput.apply {
@@ -77,6 +86,11 @@ class LoginFragment : Fragment() {
                 btnLogin.isVisible = true
                 userInput.isVisible = true
                 passwordInput.isVisible = true
+                if (accountManager.getAccountsByType(Auth.ARG_ACCOUNT_TYPE).isNullOrEmpty()) {
+                    val account = Account(userInput.text.toString(), Auth.ARG_ACCOUNT_TYPE)
+                    val password = passwordInput.text.toString()
+                    viewModel.addAccount(accountManager, account, password)
+                }
             }
             DataState.LOADING -> {
                 userInput.isVisible = false
@@ -91,4 +105,5 @@ class LoginFragment : Fragment() {
             }
         }
     }
+
 }
