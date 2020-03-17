@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">BankApp</string>
+    <string name="login_label">Login</string>
+    <string name="bank_name">Bank</string>
+</resources>
