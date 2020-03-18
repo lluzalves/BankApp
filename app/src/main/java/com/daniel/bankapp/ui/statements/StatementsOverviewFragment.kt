@@ -1,13 +1,16 @@
 package com.daniel.bankapp.ui.statements
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.navigation.Navigation
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-
+import com.afollestad.materialdialogs.MaterialDialog
 import com.daniel.bankapp.R
 import com.daniel.bankapp.base.DataState
 import com.daniel.bankapp.base.ModelListDataState
@@ -15,6 +18,7 @@ import com.daniel.domain.dto.Statement
 import com.daniel.domain.dto.UserAccount
 import kotlinx.android.synthetic.main.statements_overview.*
 import org.koin.android.ext.android.inject
+
 
 class StatementsOverviewFragment : Fragment() {
 
@@ -59,6 +63,17 @@ class StatementsOverviewFragment : Fragment() {
         recyclerStatement.layoutManager = staggeredGridLayoutManager
         staggeredGridLayoutManager.gapStrategy = StaggeredGridLayoutManager.GAP_HANDLING_NONE
         registerForContextMenu(recyclerStatement)
+        quitApplication.apply {
+
+            setOnClickListener { view ->
+                MaterialDialog(view.context)
+                    .title(R.string.are_you_sure)
+                    .positiveButton(R.string.ok) {
+                        Navigation.findNavController(view).popBackStack()
+                    }.negativeButton(R.string.no)
+                    .show()
+            }
+        }
     }
 
     private fun onDataStateChangeHandleViewState(statementsData: ModelListDataState<Statement>) {
@@ -82,7 +97,13 @@ class StatementsOverviewFragment : Fragment() {
 
     private fun prepareRecycler() {
         recyclerStatement.visibility = View.VISIBLE
-        statementsOverviewAdapter = StatementsOverviewAdapter(statements)
+        val dividerItemDecoration = DividerItemDecoration(
+            recyclerStatement.context,
+            RecyclerView.HORIZONTAL
+        )
+        recyclerStatement.addItemDecoration(dividerItemDecoration)
+        statementsOverviewAdapter =
+            StatementsOverviewAdapter(statements, getString(R.string.recent_header))
         recyclerStatement.adapter = statementsOverviewAdapter
     }
 
