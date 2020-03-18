@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.navigation.Navigation
 import com.daniel.bankapp.R
 import com.daniel.bankapp.auth.*
 import com.daniel.bankapp.base.DataState
@@ -42,7 +43,6 @@ class LoginFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         viewModel.value.observe(viewLifecycleOwner, Observer { loginDataState ->
             val dataState = loginDataState ?: return@Observer
             onDataStateChangeHandleViewState(dataState)
@@ -82,14 +82,16 @@ class LoginFragment : Fragment() {
     private fun onDataStateChangeHandleViewState(dataState: ModelDataState<UserAccount>) {
         when (dataState.state) {
             DataState.COMPLETED -> {
-                progressBar.isVisible = false
-                btnLogin.isVisible = true
-                userInput.isVisible = true
-                passwordInput.isVisible = true
                 if (accountManager.getAccountsByType(Auth.ARG_ACCOUNT_TYPE).isNullOrEmpty()) {
                     val account = Account(userInput.text.toString(), Auth.ARG_ACCOUNT_TYPE)
                     val password = passwordInput.text.toString()
                     viewModel.addAccount(accountManager, account, password)
+                }
+                view?.let { view ->
+                    val  bundle  = Bundle()
+                    bundle.putSerializable("userAccount", dataState.data)
+                    Navigation.findNavController(view)
+                        .navigate(R.id.statementsOverviewFragment,bundle)
                 }
             }
             DataState.LOADING -> {
@@ -100,6 +102,10 @@ class LoginFragment : Fragment() {
             }
             DataState.FAILED -> {
                 btnLogin.isVisible = true
+                progressBar.isVisible = false
+                btnLogin.isVisible = true
+                userInput.isVisible = true
+                passwordInput.isVisible = true
             }
             DataState.INITIAL -> {
             }

@@ -9,7 +9,7 @@ import io.reactivex.disposables.CompositeDisposable
 import org.koin.core.KoinComponent
 
 abstract class BaseViewModel<T> : ViewModel(), KoinComponent {
-    private val _value = MutableLiveData<ModelListDataState<T>>()
+    val _value = MutableLiveData<ModelListDataState<T>>()
     val value: LiveData<ModelListDataState<T>>
         get() = _value
 
@@ -18,5 +18,5 @@ abstract class BaseViewModel<T> : ViewModel(), KoinComponent {
     abstract fun onStart()
     abstract fun onDestroy()
     abstract fun recoverState()
-    abstract fun emmitState(dataState : DataState, data: List<T>?, errorMessage : String)
+    abstract fun emmitState(dataState : DataState, data: List<T>?, errorMessage : String?)
 }

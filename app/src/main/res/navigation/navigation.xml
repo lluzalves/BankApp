@@ -8,5 +8,14 @@
         android:id="@+id/loginFragment"
         android:name="com.daniel.bankapp.ui.login.LoginFragment"
         android:label="login_fragment"
-        tools:layout="@layout/login" />
+        tools:layout="@layout/login" >
+        <action
+            android:id="@+id/action_loginFragment_to_statementsOverviewFragment"
+            app:destination="@id/statementsOverviewFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/statementsOverviewFragment"
+        android:name="com.daniel.bankapp.ui.statements.StatementsOverviewFragment"
+        android:label="fragment_statements_overview"
+        tools:layout="@layout/fragment_statements_overview" />
 </navigation>

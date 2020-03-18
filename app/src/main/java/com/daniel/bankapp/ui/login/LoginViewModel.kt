@@ -2,16 +2,14 @@ package com.daniel.bankapp.ui.login
 
 import android.accounts.Account
 import android.accounts.AccountManager
-import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.daniel.bankapp.application.permission.BankAppPermissions
 import com.daniel.bankapp.base.DataState
 import com.daniel.bankapp.base.ModelDataState
 import com.daniel.commons.applyScheduler
 import com.daniel.domain.dto.UserAccount
-import com.daniel.domain.usecases.LoginUseCase
+import com.daniel.domain.usecases.UserAccountUseCase
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
 import org.koin.core.KoinComponent
@@ -20,7 +18,7 @@ import org.koin.core.inject
 
 class LoginViewModel : ViewModel(), KoinComponent {
 
-    private val useCase: LoginUseCase by inject()
+    private val useCase: UserAccountUseCase by inject()
     private val _value = MutableLiveData<ModelDataState<UserAccount>>()
     val value: LiveData<ModelDataState<UserAccount>>
         get() = _value
@@ -28,7 +26,6 @@ class LoginViewModel : ViewModel(), KoinComponent {
     private val compositeDisposable = CompositeDisposable()
 
     fun onStart() {
-        BankAppPermissions().checkPermissions()
         emmitState(DataState.INITIAL, null, null)
     }
 
@@ -40,9 +37,14 @@ class LoginViewModel : ViewModel(), KoinComponent {
         emmitState(DataState.LOADING, null, null)
         compositeDisposable.add(useCase.getUserAccount(userName, password)
             .applyScheduler()
-            .subscribeBy { userAccount ->
-                emmitState(DataState.COMPLETED, userAccount, null)
-            })
+            .subscribeBy(
+                onError = { error ->
+                    emmitState(DataState.FAILED, null, error.localizedMessage)
+                },
+                onSuccess = { user ->
+                    emmitState(DataState.COMPLETED, user, null)
+                }
+            ))
     }
 
 
