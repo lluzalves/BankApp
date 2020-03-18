@@ -6,7 +6,7 @@ import io.reactivex.Single
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
-class LoginUseCase : KoinComponent {
+class UserAccountUseCase : KoinComponent {
     private val userAccountRepository: UserAccountRepository by inject()
 
     fun getUserAccount(userName: String, password: String): Single<UserAccount> {

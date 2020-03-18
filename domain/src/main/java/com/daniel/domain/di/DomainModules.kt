@@ -1,8 +1,10 @@
 package com.daniel.domain.di
 
-import com.daniel.domain.usecases.LoginUseCase
+import com.daniel.domain.usecases.StatementsUseCase
+import com.daniel.domain.usecases.UserAccountUseCase
 import org.koin.dsl.module
 
 val domainModule = module(override = true) {
-    factory { LoginUseCase() }
+    factory { UserAccountUseCase() }
+    factory { StatementsUseCase() }
 }

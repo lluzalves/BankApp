@@ -11,7 +11,11 @@ class StatementsUseCase : UseCase<Statement>(), KoinComponent {
     private val statementRepository: StatementRepository by inject()
 
     override fun buildUseCase(): Single<List<Statement>> {
-        return statementRepository.retrieveListOf()
+        TODO("Not implement yet")
+    }
+
+    fun getStatements(userId : String): Single<List<Statement>> {
+        return statementRepository.retrieveStatements(userId)
     }
 
 }
