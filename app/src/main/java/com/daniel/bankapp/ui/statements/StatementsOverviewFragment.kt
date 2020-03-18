@@ -54,6 +54,11 @@ class StatementsOverviewFragment : Fragment() {
         bankAccountAgencyInfo.text =
             getString(R.string.account_agency_info, userAccount.bankAccount, userAccount.agency)
         totalAmountCredit.text = getString(R.string.amount, userAccount.balance.toString())
+        staggeredGridLayoutManager =
+            StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
+        recyclerStatement.layoutManager = staggeredGridLayoutManager
+        staggeredGridLayoutManager.gapStrategy = StaggeredGridLayoutManager.GAP_HANDLING_NONE
+        registerForContextMenu(recyclerStatement)
     }
 
     private fun onDataStateChangeHandleViewState(statementsData: ModelListDataState<Statement>) {
@@ -65,7 +70,6 @@ class StatementsOverviewFragment : Fragment() {
             }
             DataState.LOADING -> {
                 progressBarStatements.visibility = View.VISIBLE
-                recyclerStatement.visibility = View.INVISIBLE
             }
             DataState.FAILED -> {
                 progressBarStatements.visibility = View.INVISIBLE
@@ -77,10 +81,6 @@ class StatementsOverviewFragment : Fragment() {
     }
 
     private fun prepareRecycler() {
-        staggeredGridLayoutManager = StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
-        recyclerStatement.layoutManager = staggeredGridLayoutManager
-        staggeredGridLayoutManager.gapStrategy = StaggeredGridLayoutManager.GAP_HANDLING_NONE
-        registerForContextMenu(recyclerStatement)
         recyclerStatement.visibility = View.VISIBLE
         statementsOverviewAdapter = StatementsOverviewAdapter(statements)
         recyclerStatement.adapter = statementsOverviewAdapter
